@@ -1,18 +1,19 @@
-import { Avatar, Box, Divider, Group, Text, Title } from "@mantine/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Group,
+  Text,
+  Title,
+} from "@mantine/core";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { BasicInfo } from "./BasicInfo";
 
 export const Create = () => {
   const [step, setStep] = useState(1);
-
-  useEffect(() => {
-    const basicInfo = localStorage.getItem("basicInfo");
-    if (basicInfo) {
-      setStep(2);
-    }
-  }, [step]);
 
   return (
     <Box>
@@ -27,6 +28,7 @@ export const Create = () => {
               <Text>{localStorage.getItem("basicInfo").name}</Text>
               <Text>{localStorage.getItem("basicInfo").phone}</Text>
               <Text>{localStorage.getItem("basicInfo").address}</Text>
+              <Button onClick={() => setStep(1)}>Back</Button>
             </Box>
           </Group>
         </Box>

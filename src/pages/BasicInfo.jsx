@@ -13,76 +13,54 @@ import {
 } from "@mantine/core";
 
 import { useForm } from "@mantine/form";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { IoMdClose } from "react-icons/io";
 
 // eslint-disable-next-line react/prop-types
 export const BasicInfo = ({ step, setStep }) => {
-  const [file, setFile] = useState(null);
-  const [fileURL, setFileURL] = useState(null);
-
   const resetRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
 
+  const storedBasicInfo = localStorage.getItem("basicInfo");
+  const basicInfo = storedBasicInfo ? JSON.parse(storedBasicInfo) : {};
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      name: "",
-      phone: "",
-      photo: "",
-      address: "",
+      name: basicInfo.name,
+      phone: basicInfo.phone,
+      photo: basicInfo.photo,
+      photoURL: basicInfo.photoURL,
+      address: basicInfo.address,
     },
 
     validate: {},
   });
 
-  useEffect(() => {
-    const basicInfo = localStorage.getItem("basicInfo");
-    if (basicInfo) {
-      const value = JSON.parse(basicInfo);
-
-      form.setValues({
-        name: value.name,
-        phone: value.phone,
-        address: value.address,
-        photo: value.photo,
-        photoURL: value.photoURL,
-      });
-
-      setStep(2);
-    }
-  }, [form, setStep]);
-
   const handleFileChange = (file) => {
-    setFile(file);
-
     if (file) {
+      form.setValues({ photo: file.name });
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        setFileURL(e.target.result);
+        form.setValues({ photoURL: e.target.result });
       };
 
       reader.readAsDataURL(file);
     } else {
-      setFileURL("");
+      form.setValues({ photo: "", photoURL: "" });
     }
   };
 
   const clearFile = () => {
-    setFile(null);
-    setFileURL(null);
+    form.setValues({ photo: "", photoURL: "" });
     resetRef.current?.();
   };
 
   const handleSubmit = (values) => {
     setLoading(true);
-
-    if (file) {
-      values.photo = file.name;
-      values.photoURL = fileURL;
-    }
 
     localStorage.setItem("basicInfo", JSON.stringify(values));
 
@@ -99,7 +77,9 @@ export const BasicInfo = ({ step, setStep }) => {
             Fill your company information.
           </Title>
           <Divider my={10} />
-          {file && fileURL && <Avatar src={fileURL} size={100} my={10} />}
+          {form.getValues().photo && form.getValues().photoURL && (
+            <Avatar src={form.getValues().photoURL} size={100} my={10} />
+          )}
           <Group>
             <FileButton
               resetRef={resetRef}
@@ -114,13 +94,13 @@ export const BasicInfo = ({ step, setStep }) => {
             </FileButton>
             <Group>
               <Text size="xs" c="dimmed">
-                {file
-                  ? file.name.length > 18
-                    ? file.name.slice(0, 15) + "..."
-                    : file.name
+                {form.getValues().photo
+                  ? form.getValues().photo.length > 18
+                    ? form.getValues().photo.slice(0, 15) + "..."
+                    : form.getValues().photo
                   : "No file selected"}
               </Text>
-              {file && fileURL && (
+              {form.getValues().photo && form.getValues().photoURL && (
                 <ActionIcon onClick={clearFile} size="xs" variant="default">
                   <IoMdClose size="10px" />
                 </ActionIcon>
