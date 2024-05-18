@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 
 import { MantineProvider } from "@mantine/core";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -25,7 +26,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         primaryColor: "bikinota",
       }}
     >
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </MantineProvider>
   </React.StrictMode>
 );
