@@ -34,6 +34,9 @@ export const BasicInfo = ({ step, setStep }) => {
       photo: basicInfo.photo,
       photoURL: basicInfo.photoURL,
       address: basicInfo.address,
+      bank: basicInfo.bank,
+      bankNumber: basicInfo.bankNumber,
+      accountName: basicInfo.accountName,
     },
 
     validate: {},
@@ -132,6 +135,38 @@ export const BasicInfo = ({ step, setStep }) => {
             placeholder="Address (optional)"
             key={form.key("address")}
             {...form.getInputProps("address")}
+          />
+
+          <Text mt={20} fw={700} c="dimmed" size="xs">
+            Bank Account
+          </Text>
+          <Divider mb={10} />
+
+          <TextInput
+            my={10}
+            withAsterisk
+            label="Bank"
+            placeholder="Bank"
+            key={form.key("bank")}
+            {...form.getInputProps("bank")}
+          />
+
+          <TextInput
+            my={10}
+            withAsterisk
+            label="Bank Number"
+            placeholder="Bank Number"
+            key={form.key("bankNumber")}
+            {...form.getInputProps("bankNumber")}
+          />
+
+          <TextInput
+            my={10}
+            withAsterisk
+            label="Account Name"
+            placeholder="Account Name"
+            key={form.key("accountName")}
+            {...form.getInputProps("accountName")}
           />
 
           <Group justify="flex-end" mt="md">

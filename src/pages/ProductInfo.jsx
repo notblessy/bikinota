@@ -6,6 +6,7 @@ import {
   Divider,
   Drawer,
   Group,
+  Modal,
   NumberFormatter,
   NumberInput,
   Table,
@@ -15,14 +16,19 @@ import {
 } from "@mantine/core";
 
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useEffect, useState } from "react";
+import { Invoice } from "../components/Invoice";
 
 // eslint-disable-next-line react/prop-types
 export const ProductInfo = ({ setStep }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [openedEdit, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
+  const [openedModal, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
+
+  const isMobile = useMediaQuery("(max-width: 50em)");
 
   const [loading, setLoading] = useState(false);
 
@@ -82,7 +88,7 @@ export const ProductInfo = ({ setStep }) => {
     localStorage.setItem("productInfo", JSON.stringify(currentItems));
 
     setLoading(false);
-
+    form.reset();
     close();
   };
 
@@ -224,11 +230,11 @@ export const ProductInfo = ({ setStep }) => {
       <Button
         disabled={!items || items?.length === 0}
         loading={loading}
-        onClick={open}
+        onClick={openModal}
         color="red"
         fullWidth
       >
-        Generate Invoice
+        Preview Invoice
       </Button>
       <Drawer
         withCloseButton={false}
@@ -244,6 +250,7 @@ export const ProductInfo = ({ setStep }) => {
             </Title>
             <TextInput
               my={10}
+              required
               withAsterisk
               label="Name"
               placeholder="Name"
@@ -253,6 +260,7 @@ export const ProductInfo = ({ setStep }) => {
 
             <NumberInput
               withAsterisk
+              required
               label="Quantity"
               placeholder="Quantity"
               key={form.key("quantity")}
@@ -260,6 +268,7 @@ export const ProductInfo = ({ setStep }) => {
             />
 
             <NumberInput
+              required
               leftSection={<Text size="xs">Rp</Text>}
               withAsterisk
               label="Rate"
@@ -333,6 +342,16 @@ export const ProductInfo = ({ setStep }) => {
           </form>
         </Container>
       </Drawer>
+      <Modal
+        size={!isMobile && "55rem"}
+        opened={openedModal}
+        onClose={closeModal}
+        fullScreen={isMobile}
+        withCloseButton={false}
+        transitionProps={{ transition: "fade", duration: 200 }}
+      >
+        <Invoice back={closeModal} />
+      </Modal>
     </Box>
   );
 };
