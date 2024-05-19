@@ -64,7 +64,9 @@ export const BasicInfo = ({ step, setStep }) => {
 
     localStorage.setItem("basicInfo", JSON.stringify(values));
 
-    setStep(step + 1);
+    const next = step + 1;
+    localStorage.setItem("step", next);
+    setStep(next);
     setLoading(false);
   };
 

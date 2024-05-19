@@ -1,0 +1,4 @@
+.hoverable:hover {
+  background-color: #F9F9F9;
+  cursor: pointer;
+}

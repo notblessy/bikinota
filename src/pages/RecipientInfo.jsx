@@ -28,7 +28,10 @@ export const RecipientInfo = ({ step, setStep }) => {
 
     localStorage.setItem("recipientInfo", JSON.stringify(values));
 
-    setStep(step + 1);
+    const next = step + 1;
+    localStorage.setItem("step", next);
+    setStep(next);
+
     setLoading(false);
   };
 
@@ -68,7 +71,10 @@ export const RecipientInfo = ({ step, setStep }) => {
           <Group justify="flex-end" mt="md" grow>
             <Button
               loading={loading}
-              onClick={() => setStep(1)}
+              onClick={() => {
+                localStorage.setItem("step", 1);
+                setStep(1);
+              }}
               variant="light"
               color="red"
             >
