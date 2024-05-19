@@ -112,6 +112,10 @@ export const BasicInfo = ({ step, setStep }) => {
               )}
             </Group>
           </Group>
+          <Text mt={20} fw={700} c="dimmed" size="xs">
+            Information
+          </Text>
+          <Divider mb={10} />
           <TextInput
             my={10}
             withAsterisk

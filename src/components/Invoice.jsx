@@ -99,7 +99,9 @@ export const Invoice = ({ back }) => {
           {recipientInfo.name}
         </Text>
         <Text size="sm">{recipientInfo.phone}</Text>
-        <Text size="sm">{recipientInfo.address}</Text>
+        <Text size="sm" c="dimmed">
+          {recipientInfo.address}
+        </Text>
       </Box>
       <Box mt={20}>
         <Table>
