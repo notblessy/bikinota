@@ -1,6 +1,15 @@
 import "@mantine/core/styles.css";
 
-import { Anchor, Box, Button, Container, Grid, Group } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Group,
+  HoverCard,
+  Text,
+} from "@mantine/core";
 
 import { MdReceipt } from "react-icons/md";
 import { Route, Routes } from "react-router-dom";
@@ -17,9 +26,21 @@ function App() {
               <Group justify="flex-end">
                 <Anchor style={{ color: "#0D0D0D" }}>Home</Anchor>
                 <Anchor style={{ color: "#0D0D0D" }}>About</Anchor>
-                <Button color="red" variant="light">
-                  Sign Up
-                </Button>
+                <HoverCard width={280} shadow="md">
+                  <HoverCard.Target>
+                    <Button color="red" variant="light">
+                      Sign Up
+                    </Button>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown>
+                    <Text size="sm" fw={600}>
+                      COMING SOON!
+                    </Text>
+                    <Text size="sm">
+                      Sign up to store your invoices history.
+                    </Text>
+                  </HoverCard.Dropdown>
+                </HoverCard>
               </Group>
             </Group>
           </Box>
