@@ -14,6 +14,7 @@ import {
 import { MdReceipt } from "react-icons/md";
 import { Route, Routes } from "react-router-dom";
 import { Create } from "./pages/Create";
+import { Success } from "./pages/Success";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Create />} />
             <Route path="/create" element={<Create />} />
+            <Route path="/success" element={<Success />} />
           </Routes>
         </Grid.Col>
       </Grid>
