@@ -12,20 +12,33 @@ import {
 } from "@mantine/core";
 
 import { MdReceipt } from "react-icons/md";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { Create } from "./pages/Create";
 import { Success } from "./pages/Success";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
+  const navigate = useNavigate();
   return (
     <Container size="xs">
       <Grid>
         <Grid.Col span={12}>
-          <Box style={{ borderBottom: "1px solid #DEE2E6", padding: 10 }}>
+          <Box
+            style={{
+              borderBottom: "1px solid #DEE2E6",
+              padding: 10,
+              background: "#FFF",
+            }}
+          >
             <Group justify="space-between">
               <MdReceipt color="#ED191B" size="30px" />
               <Group justify="flex-end">
-                <Anchor style={{ color: "#0D0D0D" }}>Home</Anchor>
+                <Anchor
+                  style={{ color: "#0D0D0D" }}
+                  onClick={() => navigate("/")}
+                >
+                  Home
+                </Anchor>
                 <Anchor style={{ color: "#0D0D0D" }}>About</Anchor>
                 <HoverCard width={280} shadow="md">
                   <HoverCard.Target>
@@ -48,7 +61,7 @@ function App() {
         </Grid.Col>
         <Grid.Col span={12}>
           <Routes>
-            <Route path="/" element={<Create />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/create" element={<Create />} />
             <Route path="/success" element={<Success />} />
           </Routes>
