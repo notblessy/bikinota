@@ -9,11 +9,8 @@ import {
   NumberFormatter,
   Table,
   Text,
-  ThemeIcon,
 } from "@mantine/core";
 import { CiCircleChevRight } from "react-icons/ci";
-import { FaRegNoteSticky } from "react-icons/fa6";
-import { SiPushbullet } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
 
@@ -85,7 +82,7 @@ export const Invoice = ({ back }) => {
   ));
 
   return (
-    <Box p={20} style={{ overflow: "auto", height: "1169px" }}>
+    <Box p={20} style={{ overflow: "auto" }}>
       <Box ref={targetRef}>
         <Group justify="space-between">
           <Group>
@@ -239,7 +236,7 @@ export const Invoice = ({ back }) => {
       </Box>
       <Group mt={50}>
         <Button variant="light" onClick={back}>
-          Back
+          Dismiss
         </Button>
         <Button
           onClick={() => {
