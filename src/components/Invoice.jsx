@@ -56,7 +56,12 @@ export const Invoice = ({ back }) => {
   const rows = productInfo.map((item, index) => (
     <Table.Tr key={`${item.name}-${index}`}>
       <Table.Td>{index + 1}</Table.Td>
-      <Table.Td>{item.name}</Table.Td>
+      <Table.Td maw={200}>
+        <Text fz={14}>{item.name}</Text>
+        <Text fz={10} c="dimmed">
+          {item.description}
+        </Text>
+      </Table.Td>
       <Table.Td>{item.quantity}</Table.Td>
       <Table.Td>
         {

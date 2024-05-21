@@ -5,6 +5,7 @@ import {
   Container,
   Divider,
   Drawer,
+  Grid,
   Group,
   Modal,
   NumberFormatter,
@@ -12,6 +13,7 @@ import {
   Table,
   Text,
   TextInput,
+  Textarea,
   Title,
 } from "@mantine/core";
 
@@ -51,6 +53,7 @@ export const ProductInfo = ({ setStep }) => {
     initialValues: {
       name: "",
       quantity: 0,
+      description: "",
       rate: 0,
       subtotal: 0,
       createdAt: null,
@@ -63,6 +66,7 @@ export const ProductInfo = ({ setStep }) => {
     initialValues: {
       id: "",
       name: "",
+      description: "",
       quantity: 0,
       rate: 0,
       subtotal: 0,
@@ -142,7 +146,14 @@ export const ProductInfo = ({ setStep }) => {
       }}
       style={{ fontSize: 12 }}
     >
-      <Table.Td>{item.name}</Table.Td>
+      <Table.Td>
+        <Text fz={12}>{item.name}</Text>
+        {item.description && (
+          <Text fz={10} c="dimmed">
+            {item.description}
+          </Text>
+        )}
+      </Table.Td>
       <Table.Td>{item.quantity}</Table.Td>
       <Table.Td>
         {
@@ -241,6 +252,7 @@ export const ProductInfo = ({ setStep }) => {
         position="bottom"
         opened={opened}
         onClose={close}
+        overlayProps={{ backgroundOpacity: 0.1, blur: 4 }}
       >
         <Container size="xs">
           <Title order={3}>Item</Title>
@@ -258,24 +270,40 @@ export const ProductInfo = ({ setStep }) => {
               {...form.getInputProps("name")}
             />
 
-            <NumberInput
-              withAsterisk
-              required
-              label="Quantity"
-              placeholder="Quantity"
-              key={form.key("quantity")}
-              {...form.getInputProps("quantity")}
+            <Textarea
+              my={10}
+              minRows={3}
+              maxRows={10}
+              label="Description"
+              placeholder="Description (optional)"
+              key={form.key("description")}
+              {...form.getInputProps("description")}
             />
 
-            <NumberInput
-              required
-              leftSection={<Text size="xs">Rp</Text>}
-              withAsterisk
-              label="Rate"
-              placeholder="Rate"
-              key={form.key("rate")}
-              {...form.getInputProps("rate")}
-            />
+            <Grid my={10}>
+              <Grid.Col span={3}>
+                <NumberInput
+                  withAsterisk
+                  required
+                  label="Quantity"
+                  placeholder="Quantity"
+                  key={form.key("quantity")}
+                  {...form.getInputProps("quantity")}
+                />
+              </Grid.Col>
+              <Grid.Col span={9}>
+                <NumberInput
+                  required
+                  leftSection={<Text size="xs">Rp</Text>}
+                  withAsterisk
+                  label="Rate"
+                  placeholder="Rate"
+                  key={form.key("rate")}
+                  {...form.getInputProps("rate")}
+                />
+              </Grid.Col>
+            </Grid>
+
             <Button
               mt={20}
               loading={loading}
@@ -293,6 +321,7 @@ export const ProductInfo = ({ setStep }) => {
         position="bottom"
         opened={openedEdit}
         onClose={closeEdit}
+        overlayProps={{ backgroundOpacity: 0.1, blur: 4 }}
       >
         <Container size="xs">
           <Title order={3}>Item</Title>
@@ -309,22 +338,38 @@ export const ProductInfo = ({ setStep }) => {
               {...formEdit.getInputProps("name")}
             />
 
-            <NumberInput
-              withAsterisk
-              label="Quantity"
-              placeholder="Quantity"
-              key={formEdit.key("quantity")}
-              {...formEdit.getInputProps("quantity")}
+            <Textarea
+              my={10}
+              minRows={3}
+              maxRows={10}
+              label="Description"
+              placeholder="Description (optional)"
+              key={formEdit.key("description")}
+              {...formEdit.getInputProps("description")}
             />
 
-            <NumberInput
-              leftSection={<Text size="xs">Rp</Text>}
-              withAsterisk
-              label="Rate"
-              placeholder="Rate"
-              key={formEdit.key("rate")}
-              {...formEdit.getInputProps("rate")}
-            />
+            <Grid my={10}>
+              <Grid.Col span={3}>
+                <NumberInput
+                  withAsterisk
+                  label="Quantity"
+                  placeholder="Quantity"
+                  key={formEdit.key("quantity")}
+                  {...formEdit.getInputProps("quantity")}
+                />
+              </Grid.Col>
+              <Grid.Col span={9}>
+                <NumberInput
+                  leftSection={<Text size="xs">Rp</Text>}
+                  withAsterisk
+                  label="Rate"
+                  placeholder="Rate"
+                  key={formEdit.key("rate")}
+                  {...formEdit.getInputProps("rate")}
+                />
+              </Grid.Col>
+            </Grid>
+
             <Group grow>
               <Button
                 variant="light"
@@ -349,6 +394,7 @@ export const ProductInfo = ({ setStep }) => {
         fullScreen={isMobile}
         withCloseButton={false}
         transitionProps={{ transition: "fade", duration: 200 }}
+        overlayProps={{ backgroundOpacity: 0.1, blur: 4 }}
       >
         <Invoice back={closeModal} />
       </Modal>
