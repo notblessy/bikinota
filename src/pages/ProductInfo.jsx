@@ -343,7 +343,7 @@ export const ProductInfo = ({ setStep }) => {
         </Container>
       </Drawer>
       <Modal
-        size={!isMobile && "55rem"}
+        size={!isMobile && "827px"}
         opened={openedModal}
         onClose={closeModal}
         fullScreen={isMobile}

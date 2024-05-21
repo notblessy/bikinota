@@ -3,11 +3,17 @@ import {
   Box,
   Button,
   Divider,
+  Grid,
   Group,
+  List,
   NumberFormatter,
   Table,
   Text,
+  ThemeIcon,
 } from "@mantine/core";
+import { CiCircleChevRight } from "react-icons/ci";
+import { FaRegNoteSticky } from "react-icons/fa6";
+import { SiPushbullet } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
 
@@ -38,6 +44,7 @@ export const Invoice = ({ back }) => {
   const basicInfo = JSON.parse(localStorage.getItem("basicInfo"));
   const recipientInfo = JSON.parse(localStorage.getItem("recipientInfo"));
   const productInfo = JSON.parse(localStorage.getItem("productInfo"));
+  const additionalNotes = JSON.parse(localStorage.getItem("additionalNotes"));
 
   const invoiceNo = generateInvoice(basicInfo.name);
 
@@ -78,7 +85,7 @@ export const Invoice = ({ back }) => {
   ));
 
   return (
-    <Box p={20} style={{ overflow: "auto", minWidth: "50rem" }}>
+    <Box p={20} style={{ overflow: "auto", height: "1169px" }}>
       <Box ref={targetRef}>
         <Group justify="space-between">
           <Group>
@@ -135,13 +142,16 @@ export const Invoice = ({ back }) => {
         <Group mt={20} justify="space-between" p={7}>
           <Box>
             <Text size="sm" fw={700} c="dimmed">
-              Transfer to
+              Payment Method
             </Text>
+            <Divider mb={10} />
             <Text size="sm" fw={700}>
               {basicInfo.bank}
             </Text>
             <Text size="sm">{basicInfo.bankNumber}</Text>
-            <Text size="sm">{basicInfo.accountName}</Text>
+            <Text size="sm" c="dimmed">
+              {basicInfo.accountName}
+            </Text>
           </Box>
           <Box>
             <Group justify="space-between" px={7}>
@@ -193,20 +203,41 @@ export const Invoice = ({ back }) => {
             </Group>
           </Box>
         </Group>
-        <Group justify="space-between" my={50}>
-          <Text size="lg" fw={700} c="dimmed">
-            Thank you for your purchase!
-          </Text>
-          <Box pr={60} style={{ textAlign: "center" }}>
+        <Grid mt={50}>
+          <Grid.Col span={7}>
+            {additionalNotes?.length > 0 ? (
+              <>
+                <Text size="sm" fw={700} c="dimmed">
+                  Additional Notes
+                </Text>
+                <Divider mb={10} />
+                <List
+                  spacing="xs"
+                  size="xs"
+                  center
+                  icon={<CiCircleChevRight color="#7D7D7D" size={14} />}
+                >
+                  {additionalNotes?.map((note, index) => (
+                    <List.Item key={note.id + index}>{note.notes}</List.Item>
+                  ))}
+                </List>
+              </>
+            ) : (
+              <Text size="lg" fw={700} c="dimmed">
+                Thank you for your purchase!
+              </Text>
+            )}
+          </Grid.Col>
+          <Grid.Col offset={1} span={4} pr={60} style={{ textAlign: "center" }}>
             <Text size="md">{basicInfo.name}</Text>
             <Divider mt={40} />
             <Text size="xs" c="dimmed">
               Administrator
             </Text>
-          </Box>
-        </Group>
+          </Grid.Col>
+        </Grid>
       </Box>
-      <Group>
+      <Group mt={50}>
         <Button variant="light" onClick={back}>
           Back
         </Button>

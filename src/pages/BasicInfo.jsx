@@ -1,9 +1,12 @@
 import {
   ActionIcon,
+  Anchor,
   Avatar,
   Box,
   Button,
+  Container,
   Divider,
+  Drawer,
   FileButton,
   Group,
   Text,
@@ -13,18 +16,40 @@ import {
 } from "@mantine/core";
 
 import { useForm } from "@mantine/form";
-import { useRef, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { useEffect, useRef, useState } from "react";
 
 import { IoMdClose } from "react-icons/io";
 
+const generateRandomID = () => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let result = "";
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  const timestamp = new Date().getTime();
+  return result + timestamp;
+};
+
 // eslint-disable-next-line react/prop-types
 export const BasicInfo = ({ step, setStep }) => {
+  const [opened, { open, close }] = useDisclosure(false);
+
   const resetRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
+  const [notes, setNotes] = useState([]);
 
   const storedBasicInfo = localStorage.getItem("basicInfo");
   const basicInfo = storedBasicInfo ? JSON.parse(storedBasicInfo) : {};
+
+  useEffect(() => {
+    const storedNotes = JSON.parse(localStorage.getItem("additionalNotes"));
+    if (storedNotes) {
+      setNotes(storedNotes);
+    }
+  }, []);
 
   const form = useForm({
     mode: "uncontrolled",
@@ -37,6 +62,15 @@ export const BasicInfo = ({ step, setStep }) => {
       bank: basicInfo.bank,
       bankNumber: basicInfo.bankNumber,
       accountName: basicInfo.accountName,
+    },
+
+    validate: {},
+  });
+
+  const formNotes = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      notes: "",
     },
 
     validate: {},
@@ -70,6 +104,40 @@ export const BasicInfo = ({ step, setStep }) => {
     const next = step + 1;
     localStorage.setItem("step", next);
     setStep(next);
+    setLoading(false);
+  };
+
+  const handleSubmitNotes = (values) => {
+    setLoading(true);
+
+    values.id = generateRandomID();
+    values.createdAt = new Date();
+
+    let savedNotes = JSON.parse(localStorage.getItem("additionalNotes"));
+    if (savedNotes) {
+      savedNotes.push(values);
+      savedNotes.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      setNotes(savedNotes);
+    } else {
+      savedNotes = [values];
+      setNotes([values]);
+    }
+
+    localStorage.setItem("additionalNotes", JSON.stringify(savedNotes));
+
+    formNotes.reset();
+    setLoading(false);
+  };
+
+  const handleRemoveNotes = (id) => {
+    setLoading(true);
+
+    let savedNotes = JSON.parse(localStorage.getItem("additionalNotes"));
+    savedNotes = savedNotes.filter((note) => note.id !== id);
+    setNotes(savedNotes);
+
+    localStorage.setItem("additionalNotes", JSON.stringify(savedNotes));
+
     setLoading(false);
   };
 
@@ -173,13 +241,75 @@ export const BasicInfo = ({ step, setStep }) => {
             {...form.getInputProps("accountName")}
           />
 
-          <Group justify="flex-end" mt="md">
-            <Button loading={loading} type="submit" color="red" fullWidth>
+          <Group justify="flex-end" mt="md" grow>
+            <Button loading={loading} onClick={open} variant="light">
+              Additional Notes
+            </Button>
+            <Button loading={loading} type="submit" color="red">
               Submit
             </Button>
           </Group>
         </form>
       </Box>
+      <Drawer
+        withCloseButton={false}
+        position="bottom"
+        opened={opened}
+        onClose={close}
+        overlayProps={{ backgroundOpacity: 0.1, blur: 4 }}
+      >
+        <Container size="xs">
+          <Title order={3}>Additional Notes</Title>
+          <form onSubmit={formNotes.onSubmit(handleSubmitNotes)}>
+            <Title order={6} c="dimmed" mb={20}>
+              Fill if you have additional notes.
+            </Title>
+
+            {notes &&
+              notes.length > 0 &&
+              notes.map((note) => (
+                <Box mb={20} key={note.id} style={{ position: "relative" }}>
+                  <Text
+                    size="xs"
+                    c="#8B8B8B"
+                    style={{
+                      background: "#F5F5F5",
+                      padding: "10px 15px",
+                      borderRadius: 5,
+                    }}
+                  >
+                    {note.notes}
+                  </Text>
+                  <Anchor
+                    className="closeButton"
+                    underline="none"
+                    onClick={() => handleRemoveNotes(note.id)}
+                  >
+                    X
+                  </Anchor>
+                </Box>
+              ))}
+
+            <Textarea
+              mt={20}
+              withAsterisk
+              label="Notes"
+              placeholder="Notes"
+              key={formNotes.key("notes")}
+              {...formNotes.getInputProps("notes")}
+            />
+
+            <Group my={10} justify="flex-end" mt="md" grow>
+              <Button loading={loading} variant="light" onClick={close}>
+                Dismiss
+              </Button>
+              <Button loading={loading} type="submit">
+                Add Notes
+              </Button>
+            </Group>
+          </form>
+        </Container>
+      </Drawer>
     </Box>
   );
 };
