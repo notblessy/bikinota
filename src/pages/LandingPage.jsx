@@ -62,7 +62,7 @@ export default function LandingPage() {
               <Title ta="center" order={2} c="#161617">
                 Welcome to Bikinota
               </Title>
-              <Box px={30}>
+              <Box>
                 <Text ta="center" c="dimmed" fz={14}>
                   Create Professional Invoices Instantly – For Free!
                 </Text>
@@ -89,7 +89,7 @@ export default function LandingPage() {
                     high-quality PDF format, ready to send to your clients.
                   </List.Item>
                 </List>
-                <Center my={50}>
+                <Center>
                   <Image
                     radius="md"
                     h={200}
@@ -122,7 +122,7 @@ export default function LandingPage() {
             }}
           />
           <Box style={{ zIndex: 99999 }} p={10} mb={30}>
-            <Box px={30} mb={60}>
+            <Box mb={60}>
               <Title order={2} style={{ lineHeight: 1.2, margin: "0 0 10px" }}>
                 A{" "}
                 <Text component="span" c="#F95252" inherit>
@@ -136,7 +136,7 @@ export default function LandingPage() {
               </Text>
             </Box>
 
-            <Timeline px={30} active={3} bulletSize={24} lineWidth={2}>
+            <Timeline active={3} bulletSize={24} lineWidth={2}>
               <Timeline.Item
                 bullet={<MdBusinessCenter size={12} />}
                 title="Your Business"
