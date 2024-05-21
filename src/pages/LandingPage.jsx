@@ -76,15 +76,15 @@ export default function LandingPage() {
                     </ThemeIcon>
                   }
                 >
-                  <List.Item my={30}>
+                  <List.Item>
                     <b>Free to Use</b> – No hidden costs or subscriptions. Use
                     Bikinota to create and manage invoices at no charge.
                   </List.Item>
-                  <List.Item my={30}>
+                  <List.Item>
                     <b>User-Friendly</b> – Designed for simplicity and
                     efficiency.
                   </List.Item>
-                  <List.Item my={30}>
+                  <List.Item>
                     <b>Professional Output</b> – Download your invoices in
                     high-quality PDF format, ready to send to your clients.
                   </List.Item>
