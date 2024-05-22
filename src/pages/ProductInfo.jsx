@@ -36,17 +36,39 @@ const renderLabelOtherPayment = (payment) => {
     case "tax":
       return (
         <Text size="12px" fw={700}>
-          {payment.type.label}
+          {payment.type.label}{" "}
+          <span style={{ fontSize: "10px", color: "#858E96" }}>
+            {
+              <NumberFormatter
+                suffix="%"
+                thousandSeparator="."
+                decimalSeparator=","
+                value={payment.amount}
+              />
+            }
+          </span>
         </Text>
       );
     case "discount":
       return (
-        <Text size="12px" fw={700}>
-          {payment.type.label}
-          <span
-            style={{ fontSize: "12px", color: "#858E96" }}
-          >{`(${payment.name})`}</span>
-        </Text>
+        <>
+          <Text size="12px" fw={700}>
+            {payment.type.label}
+          </Text>
+          <Text size="10px" fw={400} c="dimmed">
+            {payment.name} {" - "}
+            <span style={{ fontSize: "10px", color: "#858E96" }}>
+              {
+                <NumberFormatter
+                  suffix="%"
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  value={payment.amount}
+                />
+              }
+            </span>
+          </Text>
+        </>
       );
     default:
       return (
