@@ -5,8 +5,10 @@ import {
   Divider,
   Grid,
   Group,
+  Image,
   List,
   NumberFormatter,
+  SimpleGrid,
   Table,
   Text,
 } from "@mantine/core";
@@ -34,6 +36,66 @@ const generateInvoice = (name) => {
   return invoiceNumber;
 };
 
+const renderLabelOtherPayment = (payment) => {
+  switch (payment.type.value) {
+    case "tax":
+      return (
+        <Text size="14px" fw={700}>
+          {payment.type.label}
+        </Text>
+      );
+    case "discount":
+      return (
+        <Text size="14px" fw={700}>
+          {payment.type.label}
+          <span
+            style={{ fontSize: "14px", color: "#858E96" }}
+          >{`(${payment.name})`}</span>
+        </Text>
+      );
+    default:
+      return (
+        <Text size="14px" fw={700}>
+          {payment.name}
+        </Text>
+      );
+  }
+};
+
+const renderTotalOtherPayment = (payment, totalTax, totalDiscount) => {
+  switch (payment.type.value) {
+    case "tax":
+      return (
+        <NumberFormatter
+          prefix="IDR "
+          thousandSeparator="."
+          decimalSeparator=","
+          value={totalTax}
+        />
+      );
+    case "discount":
+      return (
+        <NumberFormatter
+          allowNegative={false}
+          prefix="- IDR "
+          thousandSeparator="."
+          decimalSeparator=","
+          value={totalDiscount}
+        />
+      );
+    default:
+      return (
+        <NumberFormatter
+          allowNegative={false}
+          prefix="- IDR "
+          thousandSeparator="."
+          decimalSeparator=","
+          value={payment.amount}
+        />
+      );
+  }
+};
+
 // eslint-disable-next-line react/prop-types
 export const Invoice = ({ back }) => {
   const navigate = useNavigate();
@@ -42,8 +104,48 @@ export const Invoice = ({ back }) => {
   const recipientInfo = JSON.parse(localStorage.getItem("recipientInfo"));
   const productInfo = JSON.parse(localStorage.getItem("productInfo"));
   const additionalNotes = JSON.parse(localStorage.getItem("additionalNotes"));
+  const images = JSON.parse(localStorage.getItem("images"));
+  const otherPayments = JSON.parse(localStorage.getItem("otherPayments"));
 
   const invoiceNo = generateInvoice(basicInfo.name);
+
+  const itemSubtotal = productInfo.reduce((prev, next) => {
+    return prev + next.subtotal;
+  }, 0);
+
+  const otherPaymentTotal = otherPayments.reduce((prev, next) => {
+    if (next.type.value === "otherDeduction") {
+      return prev - next.amount;
+    } else if (next.type.value === "otherAddition") {
+      return prev + next.amount;
+    }
+
+    return prev;
+  }, 0);
+
+  let grandTotal = itemSubtotal + otherPaymentTotal;
+
+  const totalDiscount = otherPayments.reduce((prev, next) => {
+    if (next.type.value === "discount") {
+      prev = (next.amount / 100) * grandTotal;
+      return prev;
+    }
+
+    return prev;
+  }, 0);
+
+  grandTotal = grandTotal - totalDiscount;
+
+  const totalTax = otherPayments.reduce((prev, next) => {
+    if (next.type.value === "tax") {
+      prev = (next.amount / 100) * grandTotal;
+      return prev;
+    }
+
+    return prev;
+  }, 0);
+
+  grandTotal = grandTotal + totalTax;
 
   const { toPDF, targetRef } = usePDF({
     filename: `${basicInfo.name} - ${invoiceNo}.pdf`,
@@ -66,7 +168,7 @@ export const Invoice = ({ back }) => {
       <Table.Td>
         {
           <NumberFormatter
-            prefix="Rp"
+            prefix="IDR "
             thousandSeparator="."
             decimalSeparator=","
             value={item.rate}
@@ -76,7 +178,7 @@ export const Invoice = ({ back }) => {
       <Table.Td>
         {
           <NumberFormatter
-            prefix="Rp"
+            prefix="IDR "
             thousandSeparator="."
             decimalSeparator=","
             value={item.subtotal}
@@ -135,7 +237,7 @@ export const Invoice = ({ back }) => {
                 <Table.Th>Item</Table.Th>
                 <Table.Th>Qty</Table.Th>
                 <Table.Th>Rate</Table.Th>
-                <Table.Th>Subtotal</Table.Th>
+                <Table.Th>Total</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
@@ -146,7 +248,6 @@ export const Invoice = ({ back }) => {
             <Text size="sm" fw={700} c="dimmed">
               Payment Method
             </Text>
-            <Divider mb={10} />
             <Text size="sm" fw={700}>
               {basicInfo.bank}
             </Text>
@@ -155,31 +256,50 @@ export const Invoice = ({ back }) => {
               {basicInfo.accountName}
             </Text>
           </Box>
-          <Box>
-            <Group justify="space-between" px={7}>
-              <Text size="sm">Total</Text>
-              <Text size="sm">
-                {
-                  <NumberFormatter
-                    prefix="Rp"
-                    thousandSeparator="."
-                    decimalSeparator=","
-                    value={productInfo.reduce(
-                      (acc, item) => acc + item.subtotal,
-                      0
-                    )}
-                  />
-                }
-              </Text>
-            </Group>
-            <Group justify="space-between" px={7}>
-              <Text size="sm">Tax</Text>
-              <Text size="sm">Rp0</Text>
-            </Group>
-            <Group justify="space-between" px={7}>
-              <Text size="sm">Discount</Text>
-              <Text size="sm">Rp0</Text>
-            </Group>
+          <Box style={{ width: "40%" }}>
+            <Box>
+              <Grid p={5}>
+                <Grid.Col span={6}>
+                  <Box>
+                    <Text size="14px" fw={700}>
+                      Subtotal
+                    </Text>
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={6} style={{ textAlign: "right" }}>
+                  <Text size="14px">
+                    {
+                      <NumberFormatter
+                        prefix="IDR "
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        value={itemSubtotal}
+                      />
+                    }
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              {otherPayments &&
+                otherPayments.length > 0 &&
+                otherPayments.map((payment) => {
+                  return (
+                    <Grid key={payment.id} style={{ padding: 5 }}>
+                      <Grid.Col span={6}>
+                        <Box>{renderLabelOtherPayment(payment)}</Box>
+                      </Grid.Col>
+                      <Grid.Col span={6} style={{ textAlign: "right" }}>
+                        <Text size="14px">
+                          {renderTotalOtherPayment(
+                            payment,
+                            totalTax,
+                            totalDiscount
+                          )}
+                        </Text>
+                      </Grid.Col>
+                    </Grid>
+                  );
+                })}
+            </Box>
             <Group
               justify="space-between"
               style={{ background: "#ECECEC" }}
@@ -192,13 +312,10 @@ export const Invoice = ({ back }) => {
               <Text size="sm" fw={700}>
                 {
                   <NumberFormatter
-                    prefix="Rp"
+                    prefix="IDR "
                     thousandSeparator="."
                     decimalSeparator=","
-                    value={productInfo.reduce(
-                      (acc, item) => acc + item.subtotal,
-                      0
-                    )}
+                    value={grandTotal}
                   />
                 }
               </Text>
@@ -209,10 +326,9 @@ export const Invoice = ({ back }) => {
           <Grid.Col span={7}>
             {additionalNotes?.length > 0 ? (
               <>
-                <Text size="sm" fw={700} c="dimmed">
+                <Text mb={10} size="sm" fw={700} c="dimmed">
                   Additional Notes
                 </Text>
-                <Divider mb={10} />
                 <List
                   spacing="xs"
                   size="xs"
@@ -238,6 +354,28 @@ export const Invoice = ({ back }) => {
             </Text>
           </Grid.Col>
         </Grid>
+        <Box mt={50}>
+          <Text size="sm" fw={700} c="dimmed">
+            Attachments
+          </Text>
+          <SimpleGrid
+            cols={4}
+            spacing="xs"
+            verticalSpacing="xs"
+            style={{ width: "100%" }}
+          >
+            {images &&
+              images.length > 0 &&
+              images.map((image, index) => (
+                <Box key={index} p={10}>
+                  <Text size="xs" c="dimmed">
+                    {image.title}
+                  </Text>
+                  <Image radius="md" fit="contain" src={image.photoURL} />
+                </Box>
+              ))}
+          </SimpleGrid>
+        </Box>
       </Box>
       <Group mt={50}>
         <Button variant="light" onClick={back}>

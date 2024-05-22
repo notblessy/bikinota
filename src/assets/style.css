@@ -15,6 +15,18 @@
   font-size: 12px;
 }
 
+.closeButtonImage {
+  position: absolute;
+  top: 15px;
+  right: 0;
+  padding: 4px 10px;
+  cursor: pointer;
+  background: #F04545;
+  color: #FFE8E8;
+  border-radius: 100%;
+  font-size: 12px;
+}
+
 .closeButton:hover {
   background: #ED191B;
 }

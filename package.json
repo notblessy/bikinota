@@ -20,6 +20,7 @@
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
+    "compressorjs": "^1.2.1",
     "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
     "react": "^18.2.0",
