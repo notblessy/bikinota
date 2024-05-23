@@ -293,6 +293,8 @@ export const ProductInfo = ({ setStep }) => {
   const handleSubmitEdit = (values) => {
     setLoading(true);
 
+    values.subtotal = values.quantity * values.rate;
+
     let currentItems = JSON.parse(localStorage.getItem("productInfo")) || [];
     currentItems = currentItems.filter((item) => item.id !== values.id);
 
