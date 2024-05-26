@@ -12,6 +12,7 @@ import {
   Table,
   Text,
 } from "@mantine/core";
+import { isSafari } from "react-device-detect";
 import { CiCircleChevRight } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
@@ -173,7 +174,7 @@ export const Invoice = ({ back }) => {
 
   const { toPDF, targetRef } = usePDF({
     filename: `${basicInfo.name} - ${invoiceNo}.pdf`,
-    method: "open",
+    method: isSafari ? "save" : "open",
     page: {
       margin: 10,
     },
