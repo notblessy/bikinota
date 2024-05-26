@@ -214,7 +214,7 @@ export const Invoice = ({ back }) => {
   ));
 
   return (
-    <Box p={20} style={{ overflow: "auto" }}>
+    <Box p={20} style={{ overflow: "auto", width: "827px" }}>
       <Box ref={targetRef}>
         <Group justify="space-between">
           <Group>
@@ -379,7 +379,7 @@ export const Invoice = ({ back }) => {
             </Text>
           </Grid.Col>
         </Grid>
-        {images && (
+        {images?.length > 0 && (
           <Box mt={50}>
             <Text size="sm" fw={700} c="dimmed">
               Attachments
@@ -390,15 +390,14 @@ export const Invoice = ({ back }) => {
               verticalSpacing="xs"
               style={{ width: "100%" }}
             >
-              {images.length > 0 &&
-                images.map((image, index) => (
-                  <Box key={index} p={10}>
-                    <Text size="xs" c="dimmed">
-                      {image.title}
-                    </Text>
-                    <Image radius="md" fit="contain" src={image.photoURL} />
-                  </Box>
-                ))}
+              {images.map((image, index) => (
+                <Box key={index} p={10}>
+                  <Text size="xs" c="dimmed">
+                    {image.title}
+                  </Text>
+                  <Image radius="md" fit="contain" src={image.photoURL} />
+                </Box>
+              ))}
             </SimpleGrid>
           </Box>
         )}
