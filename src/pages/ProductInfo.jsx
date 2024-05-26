@@ -159,7 +159,7 @@ export const ProductInfo = ({ setStep }) => {
 
     const storedImages = localStorage.getItem("images");
     if (storedImages) {
-      const images = storedImages ? JSON.parse(storedImages) : {};
+      const images = storedImages ? JSON.parse(storedImages) : [];
 
       setImages(images);
     }
@@ -168,7 +168,7 @@ export const ProductInfo = ({ setStep }) => {
     if (storedOtherPayments) {
       const otherPayments = storedOtherPayments
         ? JSON.parse(storedOtherPayments)
-        : {};
+        : [];
 
       setOtherPayments(otherPayments);
     }
@@ -844,7 +844,7 @@ export const ProductInfo = ({ setStep }) => {
                 >
                   {(props) => (
                     <Button variant="filled" color="red" size="xs" {...props}>
-                      Upload Logo
+                      Upload Image
                     </Button>
                   )}
                 </FileButton>

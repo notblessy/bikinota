@@ -129,11 +129,11 @@ export const Invoice = ({ back }) => {
   const productInfo = JSON.parse(localStorage.getItem("productInfo"));
   const additionalNotes = JSON.parse(localStorage.getItem("additionalNotes"));
   const images = JSON.parse(localStorage.getItem("images"));
-  const otherPayments = JSON.parse(localStorage.getItem("otherPayments"));
+  const otherPayments = JSON.parse(localStorage.getItem("otherPayments")) || [];
 
   const invoiceNo = generateInvoice(basicInfo.name);
 
-  const itemSubtotal = productInfo.reduce((prev, next) => {
+  const itemSubtotal = productInfo?.reduce((prev, next) => {
     return prev + next.subtotal;
   }, 0);
 
@@ -378,28 +378,29 @@ export const Invoice = ({ back }) => {
             </Text>
           </Grid.Col>
         </Grid>
-        <Box mt={50}>
-          <Text size="sm" fw={700} c="dimmed">
-            Attachments
-          </Text>
-          <SimpleGrid
-            cols={4}
-            spacing="xs"
-            verticalSpacing="xs"
-            style={{ width: "100%" }}
-          >
-            {images &&
-              images.length > 0 &&
-              images.map((image, index) => (
-                <Box key={index} p={10}>
-                  <Text size="xs" c="dimmed">
-                    {image.title}
-                  </Text>
-                  <Image radius="md" fit="contain" src={image.photoURL} />
-                </Box>
-              ))}
-          </SimpleGrid>
-        </Box>
+        {images && (
+          <Box mt={50}>
+            <Text size="sm" fw={700} c="dimmed">
+              Attachments
+            </Text>
+            <SimpleGrid
+              cols={4}
+              spacing="xs"
+              verticalSpacing="xs"
+              style={{ width: "100%" }}
+            >
+              {images.length > 0 &&
+                images.map((image, index) => (
+                  <Box key={index} p={10}>
+                    <Text size="xs" c="dimmed">
+                      {image.title}
+                    </Text>
+                    <Image radius="md" fit="contain" src={image.photoURL} />
+                  </Box>
+                ))}
+            </SimpleGrid>
+          </Box>
+        )}
       </Box>
       <Group mt={50}>
         <Button variant="light" onClick={back}>
