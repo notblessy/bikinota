@@ -1,6 +1,7 @@
 import { Box, Button, Group, TextInput, Textarea, Title } from "@mantine/core";
 
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { useState } from "react";
 
 // eslint-disable-next-line react/prop-types
@@ -17,7 +18,7 @@ export const RecipientInfo = ({ step, setStep }) => {
     initialValues: {
       name: recipientInfo.name,
       phone: recipientInfo.phone,
-      photo: recipientInfo.photo,
+      address: recipientInfo.address,
     },
 
     validate: {},
@@ -25,6 +26,18 @@ export const RecipientInfo = ({ step, setStep }) => {
 
   const handleSubmit = (values) => {
     setLoading(true);
+
+    if (!values.name || !values.phone) {
+      setLoading(false);
+
+      notifications.show({
+        title: "Empty form",
+        message: "Name or phone cannot be empty",
+        color: "red",
+      });
+
+      return;
+    }
 
     localStorage.setItem("recipientInfo", JSON.stringify(values));
 

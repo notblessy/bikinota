@@ -122,6 +122,30 @@ export const BasicInfo = ({ step, setStep }) => {
   const handleSubmit = (values) => {
     setLoading(true);
 
+    if (!values.name || !values.phone) {
+      setLoading(false);
+
+      notifications.show({
+        title: "Empty form",
+        message: "Name or phone cannot be empty",
+        color: "red",
+      });
+
+      return;
+    }
+
+    if (!values.bank || !values.bankNumber || !values.accountName) {
+      setLoading(false);
+
+      notifications.show({
+        title: "Empty form",
+        message: "Complete Bank information is required",
+        color: "red",
+      });
+
+      return;
+    }
+
     localStorage.setItem("basicInfo", JSON.stringify(values));
 
     const next = step + 1;
