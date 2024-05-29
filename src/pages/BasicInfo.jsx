@@ -17,6 +17,8 @@ import {
 
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import Compressor from "compressorjs";
 import { useEffect, useRef, useState } from "react";
 
 import { IoMdClose } from "react-icons/io";
@@ -31,6 +33,8 @@ const generateRandomID = () => {
   const timestamp = new Date().getTime();
   return result + timestamp;
 };
+
+const MAX_FILE_SIZE = 1 * 1024 * 1024;
 
 // eslint-disable-next-line react/prop-types
 export const BasicInfo = ({ step, setStep }) => {
@@ -78,14 +82,33 @@ export const BasicInfo = ({ step, setStep }) => {
 
   const handleFileChange = (file) => {
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        notifications.show({
+          title: "File size is too large",
+          message: "Cannot upload file larger than 1MB",
+          color: "red",
+        });
+
+        resetRef.current?.();
+        return;
+      }
+
       form.setValues({ photo: file.name });
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        form.setValues({ photoURL: e.target.result });
-      };
+      new Compressor(file, {
+        quality: 0.2,
+        success(result) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            form.setValues({ photoURL: e.target.result });
+          };
 
-      reader.readAsDataURL(file);
+          reader.readAsDataURL(result);
+        },
+        error(err) {
+          console.log(err.message);
+        },
+      });
     } else {
       form.setValues({ photo: "", photoURL: "" });
     }

@@ -30,6 +30,9 @@ import { useEffect, useRef, useState } from "react";
 import { Invoice } from "../components/Invoice";
 import { IoMdClose } from "react-icons/io";
 import Compressor from "compressorjs";
+import { notifications } from "@mantine/notifications";
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 const renderLabelOtherPayment = (payment) => {
   switch (payment.type.value) {
@@ -333,6 +336,17 @@ export const ProductInfo = ({ setStep }) => {
 
   const handleFileChange = (file) => {
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        notifications.show({
+          title: "File size is too large",
+          message: "Cannot upload file more than 2MB.",
+          color: "red",
+        });
+
+        resetRef.current?.();
+        return;
+      }
+
       formImage.setValues({ photo: file.name });
 
       new Compressor(file, {
