@@ -17,6 +17,8 @@ import { MdReceipt } from "react-icons/md";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Create } from "./pages/Create";
 import { Success } from "./pages/Success";
+import { Analytics } from "@vercel/analytics/react";
+
 import LandingPage from "./pages/LandingPage";
 
 function App() {
@@ -69,6 +71,7 @@ function App() {
           </Routes>
         </Grid.Col>
       </Grid>
+      <Analytics />
     </Container>
   );
 }
