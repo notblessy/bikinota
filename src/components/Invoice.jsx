@@ -367,7 +367,7 @@ export const Invoice = ({ back }) => {
               </>
             ) : (
               <Text size="lg" fw={700} c="dimmed">
-                Thank you for your purchase!
+                {/* Thank you for your purchase! */}
               </Text>
             )}
           </Grid.Col>
