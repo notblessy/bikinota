@@ -30,9 +30,7 @@ const generateInvoice = (name) => {
   const utcTimestamp = Date.now();
   const lastFourDigits = utcTimestamp.toString().slice(-4);
 
-  const randomInt = Math.floor(100 + Math.random() * 90);
-
-  const invoiceNumber = `${threeLetterName}-${lastFourDigits}-${randomInt}`;
+  const invoiceNumber = `${threeLetterName}-${lastFourDigits}-000001`;
 
   return invoiceNumber;
 };
@@ -237,7 +235,12 @@ export const Invoice = ({ back }) => {
             </Text>
             <Text size="xs">{invoiceNo}</Text>
             <Text size="xs" c="dimmed">
-              24 January 2024
+              {/* 01 January 2006 */}
+              {new Date().toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
             </Text>
           </Box>
         </Group>
