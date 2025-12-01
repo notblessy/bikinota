@@ -30,7 +30,7 @@ const generateInvoice = (name) => {
   const utcTimestamp = Date.now();
   const lastFourDigits = utcTimestamp.toString().slice(-4);
 
-  const invoiceNumber = `${threeLetterName}-${lastFourDigits}-000001`;
+  const invoiceNumber = `${threeLetterName}-${lastFourDigits}-000002`;
 
   return invoiceNumber;
 };
